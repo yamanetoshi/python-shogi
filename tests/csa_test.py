@@ -63,9 +63,12 @@ T6
 '---------------------------------------------------------
 """
 
-TEST_CSA_SUMMARY = {'moves': ['2g2f', '3c3d'], 'sfen': 'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1', 'names': ['NAKAHARA', 'YONENAGA'], 'win': 'w'}
+TEST_CSA_SUMMARY = {'moves': [
+    '2g2f', '3c3d'], 'sfen': 'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1', 'names': ['NAKAHARA', 'YONENAGA'], 'win': 'w'}
+
 
 class ParserTest(unittest.TestCase):
+
     def parse_str_test(self):
         result = CSA.Parser.parse_str(TEST_CSA)
         self.assertEqual(result[0], TEST_CSA_SUMMARY)
@@ -109,10 +112,13 @@ END Position
 END Game_Summary
 '''
 
+
 class TCPProtocolTest(unittest.TestCase):
+
     def setUp(self):
         patchers = []
-        patchers.append(patch.object(CSA.TCPProtocol, 'connect', return_value=None))
+        patchers.append(patch.object(CSA.TCPProtocol,
+                                     'connect', return_value=None))
         patchers.append(patch.object(CSA.TCPProtocol, 'write'))
         patchers.append(patch.object(CSA.TCPProtocol, 'read', return_value=0))
         for patcher in patchers:
@@ -160,7 +166,8 @@ class TCPProtocolTest(unittest.TestCase):
         (turn, usi, spend_time, message) = tcp.wait_server_message(board)
         board.push(shogi.Move.from_usi(usi))
 
-        self.assertEqual(board.sfen(), 'lnsgkgsnl/1r5b1/ppppppppp/9/9/4P4/PPPP1PPPP/1B5R1/LNSGKGSNL w - 2')
+        self.assertEqual(
+            board.sfen(), 'lnsgkgsnl/1r5b1/ppppppppp/9/9/4P4/PPPP1PPPP/1B5R1/LNSGKGSNL w - 2')
 
 if __name__ == '__main__':
     unittest.main()

@@ -21,7 +21,8 @@ from __future__ import unicode_literals
 import re
 import shogi
 
-NAME_SUFFIX_RE = re.compile(r'(小\d|奨励会|アマ|さん|[四五六七八九]段|[一二三四五六]冠|前?(名人|棋聖|王位|王座|王将|棋王|九段|十段|竜王|nhk杯|新人王|女王|女流王座|女流名人|女流王将|女流王位|倉敷藤花)+)$')
+NAME_SUFFIX_RE = re.compile(
+    r'(小\d|奨励会|アマ|さん|[四五六七八九]段|[一二三四五六]冠|前?(名人|棋聖|王位|王座|王将|棋王|九段|十段|竜王|nhk杯|新人王|女王|女流王座|女流名人|女流王将|女流王位|倉敷藤花)+)$')
 
 NAMES_OF_PROFESSIONAL_PLAYERS = [
     # old
@@ -444,15 +445,17 @@ NAMES_OF_LADIES_PROFESSIONAL_PLAYERS = [
     '伊藤沙恵',
 ]
 
+
 class Name:
+
     @staticmethod
     def normalize(name):
         if name is None:
             return None
         name = name.translate({
-            ord(' '): None     , # space
-            ord('\u3000'): None, # full-width space
-            ord('\u30fb'): None, # full-width center dot
+            ord(' '): None,  # space
+            ord('\u3000'): None,  # full-width space
+            ord('\u30fb'): None,  # full-width center dot
         })
         name = NAME_SUFFIX_RE.sub('', name)
 

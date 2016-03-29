@@ -253,7 +253,9 @@ TEST_KIF_RESULT = {
     'win': 'b'
 }
 
+
 class ParserTest(unittest.TestCase):
+
     def parse_str_test(self):
         result = KIF.Parser.parse_str(TEST_KIF_STR)
         self.assertEqual(result[0], TEST_KIF_RESULT)

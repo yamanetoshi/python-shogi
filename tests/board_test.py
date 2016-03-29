@@ -21,7 +21,9 @@ from __future__ import unicode_literals
 import shogi
 import unittest
 
+
 class BoardTestCase(unittest.TestCase):
+
     def test_default(self):
         board_none = shogi.Board()
         board_sfen = shogi.Board(shogi.STARTING_SFEN)
@@ -32,7 +34,8 @@ class BoardTestCase(unittest.TestCase):
         self.assertEqual(board_none.turn, shogi.BLACK)
 
     def test_stalemate(self):
-        board = shogi.Board('+R+N+SGKG+S+N+R/+B+N+SG+LG+S+N+B/P+LPP+LPP+LP/1P2P2P1/9/9/9/9/6k2 b - 200')
+        board = shogi.Board(
+            '+R+N+SGKG+S+N+R/+B+N+SG+LG+S+N+B/P+LPP+LPP+LP/1P2P2P1/9/9/9/9/6k2 b - 200')
         self.assertEqual(len(board.pseudo_legal_moves), 0)
 
     def test_bishop_center(self):
@@ -80,42 +83,53 @@ class BoardTestCase(unittest.TestCase):
 
     def test_suicide(self):
         board = shogi.Board('1k7/9/1G7/9/9/9/9/9/9 w - 1')
-        self.assertTrue(board.is_suicide_or_check_by_dropping_pawn(shogi.Move.from_usi('8a8b')))
-        self.assertTrue(board.is_suicide_or_check_by_dropping_pawn(shogi.Move.from_usi('8a9b')))
-        self.assertTrue(board.is_suicide_or_check_by_dropping_pawn(shogi.Move.from_usi('8a7b')))
-        self.assertFalse(board.is_suicide_or_check_by_dropping_pawn(shogi.Move.from_usi('8a6b')))
+        self.assertTrue(board.is_suicide_or_check_by_dropping_pawn(
+            shogi.Move.from_usi('8a8b')))
+        self.assertTrue(board.is_suicide_or_check_by_dropping_pawn(
+            shogi.Move.from_usi('8a9b')))
+        self.assertTrue(board.is_suicide_or_check_by_dropping_pawn(
+            shogi.Move.from_usi('8a7b')))
+        self.assertFalse(board.is_suicide_or_check_by_dropping_pawn(
+            shogi.Move.from_usi('8a6b')))
         self.assertEqual(len(board.legal_moves), 2)
 
     def test_check_by_dropping_pawn(self):
         # check by dropping pawn
         board = shogi.Board('kn7/9/1G7/9/9/9/9/9/9 b P 1')
-        self.assertTrue(board.is_suicide_or_check_by_dropping_pawn(shogi.Move.from_usi('P*9b')))
+        self.assertTrue(board.is_suicide_or_check_by_dropping_pawn(
+            shogi.Move.from_usi('P*9b')))
         self.assertEqual(len(board.legal_moves), 76)
         board = shogi.Board('kn7/9/9/1NN6/9/9/9/9/9 b P 1')
-        self.assertTrue(board.is_suicide_or_check_by_dropping_pawn(shogi.Move.from_usi('P*9b')))
+        self.assertTrue(board.is_suicide_or_check_by_dropping_pawn(
+            shogi.Move.from_usi('P*9b')))
         self.assertEqual(len(board.legal_moves), 73)
 
         # king can escape
         board = shogi.Board('k8/9/9/9/9/9/9/9/9 b P 1')
-        self.assertFalse(board.is_suicide_or_check_by_dropping_pawn(shogi.Move.from_usi('P*9b')))
+        self.assertFalse(board.is_suicide_or_check_by_dropping_pawn(
+            shogi.Move.from_usi('P*9b')))
         self.assertEqual(len(board.legal_moves), 72)
 
         # dropping pawn is not protected and king cannot escape
         board = shogi.Board('kn7/1n7/9/9/9/9/9/9/9 b P 1')
-        self.assertFalse(board.is_suicide_or_check_by_dropping_pawn(shogi.Move.from_usi('P*9b')))
+        self.assertFalse(board.is_suicide_or_check_by_dropping_pawn(
+            shogi.Move.from_usi('P*9b')))
         self.assertEqual(len(board.legal_moves), 71)
 
         # dropping pawn is protected but king can escape
         board = shogi.Board('kn7/9/9/1N7/9/9/9/9/9 b P 1')
-        self.assertFalse(board.is_suicide_or_check_by_dropping_pawn(shogi.Move.from_usi('P*9b')))
+        self.assertFalse(board.is_suicide_or_check_by_dropping_pawn(
+            shogi.Move.from_usi('P*9b')))
         self.assertEqual(len(board.legal_moves), 73)
         board = shogi.Board('k8/9/1S7/9/9/9/9/9/9 b P 1')
-        self.assertFalse(board.is_suicide_or_check_by_dropping_pawn(shogi.Move.from_usi('P*9b')))
+        self.assertFalse(board.is_suicide_or_check_by_dropping_pawn(
+            shogi.Move.from_usi('P*9b')))
         self.assertEqual(len(board.legal_moves), 81)
 
         # dropping pawn can be captured other pieces besides king
         board = shogi.Board('kg7/9/1G7/9/9/9/9/9/9 b P 1')
-        self.assertFalse(board.is_suicide_or_check_by_dropping_pawn(shogi.Move.from_usi('P*9b')))
+        self.assertFalse(board.is_suicide_or_check_by_dropping_pawn(
+            shogi.Move.from_usi('P*9b')))
         self.assertEqual(len(board.legal_moves), 77)
 
     def test_lance_move(self):
@@ -123,7 +137,8 @@ class BoardTestCase(unittest.TestCase):
         self.assertEqual(len(board.legal_moves), 6)
 
     def test_is_fourfold_repetition(self):
-        board = shogi.Board('ln3g2l/1r2g1sk1/1pp1ppn2/p2ps1ppp/1PP6/2GP4P/P1N1PPPP1/1R2S1SK1/L4G1NL w Bb 44')
+        board = shogi.Board(
+            'ln3g2l/1r2g1sk1/1pp1ppn2/p2ps1ppp/1PP6/2GP4P/P1N1PPPP1/1R2S1SK1/L4G1NL w Bb 44')
         for move_str in ['9d9e', '8h6h', '8b6b', '6h8h', '6b8b', '8h6h', '8b6b', '6h8h',
                          '6b8b', '8h6h', '8b6b', '6h8h']:
             board.push(shogi.Move.from_usi(move_str))

@@ -21,36 +21,38 @@ import shogi
 import setuptools
 import os
 
+
 def read_description():
-  description = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
-  return description
+    description = open(os.path.join(
+        os.path.dirname(__file__), 'README.rst')).read()
+    return description
 
 setuptools.setup(
-    name = 'python-shogi',
-    version = shogi.__version__,
-    author = shogi.__author__,
-    author_email = shogi.__email__,
-    description = 'A pure Python shogi library with move generation and validation and handling of common formats.',
-    long_description = read_description(),
-    license = "GPL3",
-    keywords = 'shogi csa kif',
-    url = 'https://github.com/gunyarakun/python-shogi',
-    packages = ['shogi'],
-    scripts = [],
-    test_suite = 'nose.collector',
-    tests_require = ['nose>=1.0', 'mock'],
-    classifiers = [
-      'Development Status :: 2 - Pre-Alpha',
-      'Intended Audience :: Developers',
+    name='python-shogi',
+    version=shogi.__version__,
+    author=shogi.__author__,
+    author_email=shogi.__email__,
+    description='A pure Python shogi library with move generation and validation and handling of common formats.',
+    long_description=read_description(),
+    license="GPL3",
+    keywords='shogi csa kif',
+    url='https://github.com/gunyarakun/python-shogi',
+    packages=['shogi'],
+    scripts=[],
+    test_suite='nose.collector',
+    tests_require=['nose>=1.0', 'mock'],
+    classifiers=[
+        'Development Status :: 2 - Pre-Alpha',
+        'Intended Audience :: Developers',
         "License :: OSI Approved :: GNU General Public License (GPL)",
-      'Operating System :: OS Independent',
-      'Programming Language :: Python',
-      'Programming Language :: Python :: 2',
-      'Programming Language :: Python :: 2.7',
-      'Programming Language :: Python :: 3',
-      'Programming Language :: Python :: 3.3',
-      'Programming Language :: Python :: 3.4',
-      'Topic :: Games/Entertainment :: Board Games',
-      'Topic :: Software Development :: Libraries :: Python Modules',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Topic :: Games/Entertainment :: Board Games',
+        'Topic :: Software Development :: Libraries :: Python Modules',
     ],
 )

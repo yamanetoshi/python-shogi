@@ -21,6 +21,7 @@ from __future__ import unicode_literals
 import shogi
 import unittest
 
+
 def perft(board, depth):
     if depth > 1:
         count = 0
@@ -37,7 +38,9 @@ def perft(board, depth):
     else:
         return len(board.legal_moves)
 
+
 class PerftTestCase(unittest.TestCase):
+
     def test_1(self):
         board = shogi.Board()
         self.assertEqual(perft(board, 1), 30)
@@ -50,12 +53,14 @@ class PerftTestCase(unittest.TestCase):
 
     def test_3(self):
         # stalemate
-        board = shogi.Board('+R+N+SGKG+S+N+R/+B+N+SG+LG+S+N+B/P+LPP+LPP+LP/1P2P2P1/9/9/9/9/4k4 b 9P 200')
+        board = shogi.Board(
+            '+R+N+SGKG+S+N+R/+B+N+SG+LG+S+N+B/P+LPP+LPP+LP/1P2P2P1/9/9/9/9/4k4 b 9P 200')
         self.assertEqual(perft(board, 1), 0)
 
     def test_4(self):
         # max perft with depth 1
-        board = shogi.Board('R8/2K1S1SSk/4B4/9/9/9/9/9/1L1L1L3 b RBGSNLP3g3n17p 1')
+        board = shogi.Board(
+            'R8/2K1S1SSk/4B4/9/9/9/9/9/1L1L1L3 b RBGSNLP3g3n17p 1')
         self.assertEqual(perft(board, 1), 593)
 
     def test_5(self):
@@ -70,7 +75,8 @@ class PerftTestCase(unittest.TestCase):
         self.assertEqual(perft(board, 1), 4)
 
     def test_7(self):
-        board = shogi.Board('l7l/5bS2/p1np5/6Sk1/4p2B1/PSpPPn1G1/1P1G2g1N/2+l6/L1KN1+r3 b R3Pgs7p 1')
+        board = shogi.Board(
+            'l7l/5bS2/p1np5/6Sk1/4p2B1/PSpPPn1G1/1P1G2g1N/2+l6/L1KN1+r3 b R3Pgs7p 1')
         self.assertEqual(perft(board, 1), 1)
 
 if __name__ == '__main__':

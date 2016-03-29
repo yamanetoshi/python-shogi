@@ -60,7 +60,9 @@ SERVER_MESSAGES = [
     TORYO, KACHI
 ] = range(0, len(SERVER_MESSAGE_SYMBOLS))
 
+
 class Parser:
+
     @staticmethod
     def parse_file(path):
         with open(path) as f:
@@ -97,7 +99,8 @@ class Parser:
                     current_turn_str = line[0]
                 else:
                     if not board:
-                        raise ValueError('Board infomation is not defined before a move')
+                        raise ValueError(
+                            'Board infomation is not defined before a move')
                     (color, move) = Parser.parse_move_str(line, board)
                     moves.append(move)
                     board.push(shogi.Move.from_usi(move))
@@ -107,10 +110,11 @@ class Parser:
             elif line[0] == '%':
                 # End of the game
                 if not board:
-                    raise ValueError('Board infomation is not defined before a special move')
+                    raise ValueError(
+                        'Board infomation is not defined before a special move')
                 if line in [
-                            '%TORYO', '%TIME_UP', '%ILLEGAL_MOVE'
-                        ]:
+                    '%TORYO', '%TIME_UP', '%ILLEGAL_MOVE'
+                ]:
                     lose_color = board.turn
                 elif line == '%+ILLEGAL_ACTION':
                     lose_color = shogi.BLACK
@@ -166,7 +170,7 @@ class Parser:
 
         if from_square is None:
             return (color, '{0}*{1}'.format(shogi.PIECE_SYMBOLS[piece_type].upper(),
-                shogi.SQUARE_NAMES[to_square]))
+                                            shogi.SQUARE_NAMES[to_square]))
         else:
             from_piece_type = board.pieces[from_square]
             promotion = (from_piece_type != piece_type)
@@ -228,14 +232,17 @@ class Parser:
 
                     file_index += 1
             else:
-                raise ValueError('Invalid rank/piece in hand: {0}'.format(line))
+                raise ValueError(
+                    'Invalid rank/piece in hand: {0}'.format(line))
         position['pieces_in_hand'] = [
             dict(position['pieces_in_hand'][0]),
             dict(position['pieces_in_hand'][1]),
-        ];
+        ]
         return position
 
+
 class Exporter:
+
     @staticmethod
     def sfen(pieces, pieces_in_hand, current_turn_char, move_count):
         sfen = []
@@ -297,7 +304,9 @@ class Exporter:
 
         return sfen_str
 
+
 class TCPProtocol:
+
     def __init__(self, host=None, port=0):
         if host:
             self.open(host, port)
@@ -313,7 +322,8 @@ class TCPProtocol:
         self.connect(host, port)
 
         # Heartbeats
-        self.heartbeat_thread = CSAHeartbeat(self, PING_SLEEP_DURATION, PING_DURATION)
+        self.heartbeat_thread = CSAHeartbeat(
+            self, PING_SLEEP_DURATION, PING_DURATION)
         self.heartbeat_thread.start()
 
     def connect(self, host, port):
@@ -500,9 +510,9 @@ class TCPProtocol:
         else:
             from_square = SQUARE_NAMES[move.from_square]
         command = '{0}{1}{2}{3}'.format(COLOR_SYMBOLS[color],
-                from_square,
-                SQUARE_NAMES[move.to_square],
-                PIECE_SYMBOLS[piece_type])
+                                        from_square,
+                                        SQUARE_NAMES[move.to_square],
+                                        PIECE_SYMBOLS[piece_type])
         line = self.command(command)
 
     def resign(self):
@@ -510,7 +520,9 @@ class TCPProtocol:
         self.command('%TORYO')
         match_result = self.read_line()
 
+
 class CSAHeartbeat(threading.Thread):
+
     def __init__(self, ping_target, sleep_duration, ping_duration):
         super(CSAHeartbeat, self).__init__()
         self.ping_timer = 0
@@ -522,5 +534,5 @@ class CSAHeartbeat(threading.Thread):
         if self.ping_timer >= self.ping_duration:
             ping_target.ping()
 
-        self.ping_timer += self.sleep_duration;
+        self.ping_timer += self.sleep_duration
         time.sleep(self.sleep_duration)

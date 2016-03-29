@@ -28,50 +28,50 @@ import re
 
 COLORS = [BLACK, WHITE] = range(2)
 PIECE_TYPES_WITH_NONE = [NONE,
-           PAWN,      LANCE,      KNIGHT,      SILVER,
-           GOLD,
-         BISHOP,       ROOK,
-           KING,
-      PROM_PAWN, PROM_LANCE, PROM_KNIGHT, PROM_SILVER,
-    PROM_BISHOP,  PROM_ROOK,
-] = range(15)
+                         PAWN,      LANCE,      KNIGHT,      SILVER,
+                         GOLD,
+                         BISHOP,       ROOK,
+                         KING,
+                         PROM_PAWN, PROM_LANCE, PROM_KNIGHT, PROM_SILVER,
+                         PROM_BISHOP,  PROM_ROOK,
+                         ] = range(15)
 PIECE_TYPES = [
-           PAWN,      LANCE,      KNIGHT,      SILVER,
-           GOLD,
-         BISHOP,       ROOK,
-           KING,
-      PROM_PAWN, PROM_LANCE, PROM_KNIGHT, PROM_SILVER,
+    PAWN,      LANCE,      KNIGHT,      SILVER,
+    GOLD,
+    BISHOP,       ROOK,
+    KING,
+    PROM_PAWN, PROM_LANCE, PROM_KNIGHT, PROM_SILVER,
     PROM_BISHOP,  PROM_ROOK,
 ]
 PIECE_TYPES_WITHOUT_KING = [
-           PAWN,      LANCE,      KNIGHT,      SILVER,
-           GOLD,
-         BISHOP,       ROOK,
-      PROM_PAWN, PROM_LANCE, PROM_KNIGHT, PROM_SILVER,
+    PAWN,      LANCE,      KNIGHT,      SILVER,
+    GOLD,
+    BISHOP,       ROOK,
+    PROM_PAWN, PROM_LANCE, PROM_KNIGHT, PROM_SILVER,
     PROM_BISHOP,  PROM_ROOK,
 ]
 
 MAX_PIECES_IN_HAND = [0,
-        18, 4, 4, 4,
-        4,
-        2, 2,
-        0,
-        0, 0, 0, 0,
-        0, 0,
-]
+                      18, 4, 4, 4,
+                      4,
+                      2, 2,
+                      0,
+                      0, 0, 0, 0,
+                      0, 0,
+                      ]
 
 PIECE_PROMOTED = [
-           None,
-      PROM_PAWN, PROM_LANCE, PROM_KNIGHT, PROM_SILVER,
-           None,
+    None,
+    PROM_PAWN, PROM_LANCE, PROM_KNIGHT, PROM_SILVER,
+    None,
     PROM_BISHOP,  PROM_ROOK,
-           None,
-           None,       None,        None,        None,
-           None,       None,
-];
+    None,
+    None,       None,        None,        None,
+    None,       None,
+]
 
 PIECE_SYMBOLS = ['',   'p',  'l',  'n',  's', 'g',  'b',  'r', 'k',
-                      '+p', '+l', '+n', '+s',      '+b', '+r']
+                 '+p', '+l', '+n', '+s',      '+b', '+r']
 PIECE_JAPANESE_SYMBOLS = [
     '',
     '\u6b69', '\u9999', '\u6842', '\u9280', '\u91d1', '\u89d2', '\u98db',
@@ -154,8 +154,10 @@ SQUARE_NAMES = [
     '9i', '8i', '7i', '6i', '5i', '4i', '3i', '2i', '1i',
 ]
 
+
 def file_index(square):
     return square % 9
+
 
 def rank_index(square):
     return square // 9
@@ -391,7 +393,7 @@ for square in SQUARES:
             r -= 1
 
 BB_SHIFT_R45 = [
-     1, 73, 65, 57, 49, 41, 33, 25, 17,
+    1, 73, 65, 57, 49, 41, 33, 25, 17,
     10,  1, 73, 65, 57, 49, 41, 33, 25,
     19, 10,  1, 73, 65, 57, 49, 41, 33,
     28, 19, 10,  1, 73, 65, 57, 49, 41,
@@ -411,7 +413,7 @@ BB_SHIFT_L45 = [
     54, 63, 72,  1, 11, 21, 31, 41, 51,
     63, 72,  1, 11, 21, 31, 41, 51, 61,
     72,  1, 11, 21, 31, 41, 51, 61, 71,
-     1, 11, 21, 31, 41, 51, 61, 71, 81
+    1, 11, 21, 31, 41, 51, 61, 71, 81
 ]
 
 BB_L45_ATTACKS = [[BB_VOID for i in range(128)] for k in SQUARES]
@@ -475,6 +477,7 @@ except ImportError:
             else:
                 return l - r - 1
 
+
 def can_promote(square, piece_type, color):
     if piece_type not in [PAWN, LANCE, KNIGHT, SILVER, BISHOP, ROOK]:
         return False
@@ -483,19 +486,22 @@ def can_promote(square, piece_type, color):
     else:
         return rank_index(square) >= 6
 
+
 def can_move_without_promotion(to_square, piece_type, color):
     if color == BLACK:
         return ((piece_type != PAWN and piece_type != LANCE and piece_type != KNIGHT) or
                 (piece_type == PAWN and rank_index(to_square) > 0) or
                 (piece_type == LANCE and rank_index(to_square) > 0) or
-                (piece_type == KNIGHT and rank_index(to_square) > 1) )
+                (piece_type == KNIGHT and rank_index(to_square) > 1))
     else:
         return ((piece_type != PAWN and piece_type != LANCE and piece_type != KNIGHT) or
                 (piece_type == PAWN and rank_index(to_square) < 8) or
                 (piece_type == LANCE and rank_index(to_square) < 8) or
-                (piece_type == KNIGHT and rank_index(to_square) < 7) )
+                (piece_type == KNIGHT and rank_index(to_square) < 7))
+
 
 class Piece(object):
+
     def __init__(self, piece_type, color):
         if piece_type is None:
             raise ValueError('Piece type must be set')
@@ -556,6 +562,7 @@ class Piece(object):
         else:
             return cls(PIECE_SYMBOLS.index(symbol.lower()), BLACK)
 
+
 class Move(object):
     '''
     Represents a move from a square to a square and possibly the promotion piece
@@ -591,7 +598,7 @@ class Move(object):
                 return '{0}*{1}'.format(PIECE_SYMBOLS[self.drop_piece_type].upper(), SQUARE_NAMES[self.to_square])
             else:
                 return SQUARE_NAMES[self.from_square] + SQUARE_NAMES[self.to_square] + \
-                       ('+' if self.promotion else '')
+                    ('+' if self.promotion else '')
         else:
             return '0000'
 
@@ -604,7 +611,7 @@ class Move(object):
     def __eq__(self, other):
         try:
             return self.from_square == other.from_square and self.to_square == other.to_square and \
-                   self.promotion == other.promotion and self.drop_piece_type == other.drop_piece_type
+                self.promotion == other.promotion and self.drop_piece_type == other.drop_piece_type
         except AttributeError:
             return False
 
@@ -654,6 +661,7 @@ class Move(object):
 
 
 class Occupied(object):
+
     def __init__(self, occupied_by_black, occupied_by_white):
         self.by_color = [occupied_by_black, occupied_by_white]
         self.bits = occupied_by_black | occupied_by_white
@@ -672,7 +680,8 @@ class Occupied(object):
     def __getitem__(self, key):
         if key in COLORS:
             return self.by_color[key]
-        raise KeyError('Occupied must be looked up with shogi.BLACK or shogi.WHITE')
+        raise KeyError(
+            'Occupied must be looked up with shogi.BLACK or shogi.WHITE')
 
     def ixor(self, mask, color, square):
         self.bits ^= mask
@@ -697,6 +706,7 @@ class Occupied(object):
     def __repr__(self):
         return 'Occupied({0})'.format(repr(self.by_color))
 
+
 class Board(object):
     '''
     A bitboard and additional information representing a position.
@@ -719,26 +729,27 @@ class Board(object):
     def reset(self):
         '''Restores the starting position.'''
         self.piece_bb = [
-                BB_VOID,                       # NONE
-                BB_RANK_C | BB_RANK_G,         # PAWN
-                BB_A1 | BB_I1 | BB_A9 | BB_I9, # LANCE
-                BB_A2 | BB_A8 | BB_I2 | BB_I8, # KNIGHT
-                BB_A3 | BB_A7 | BB_I3 | BB_I7, # SILVER
-                BB_A4 | BB_A6 | BB_I4 | BB_I6, # GOLD
-                BB_B2 | BB_H8,                 # BISHOP
-                BB_B8 | BB_H2,                 # ROOK
-                BB_A5 | BB_I5,                 # KING
-                BB_VOID,                       # PROM_PAWN
-                BB_VOID,                       # PROM_LANCE
-                BB_VOID,                       # PROM_KNIGHT
-                BB_VOID,                       # PROM_SILVER
-                BB_VOID,                       # PROM_BISHOP
-                BB_VOID,                       # PROM_ROOK
+            BB_VOID,                       # NONE
+            BB_RANK_C | BB_RANK_G,         # PAWN
+            BB_A1 | BB_I1 | BB_A9 | BB_I9,  # LANCE
+            BB_A2 | BB_A8 | BB_I2 | BB_I8,  # KNIGHT
+            BB_A3 | BB_A7 | BB_I3 | BB_I7,  # SILVER
+            BB_A4 | BB_A6 | BB_I4 | BB_I6,  # GOLD
+            BB_B2 | BB_H8,                 # BISHOP
+            BB_B8 | BB_H2,                 # ROOK
+            BB_A5 | BB_I5,                 # KING
+            BB_VOID,                       # PROM_PAWN
+            BB_VOID,                       # PROM_LANCE
+            BB_VOID,                       # PROM_KNIGHT
+            BB_VOID,                       # PROM_SILVER
+            BB_VOID,                       # PROM_BISHOP
+            BB_VOID,                       # PROM_ROOK
         ]
 
         self.pieces_in_hand = [collections.Counter(), collections.Counter()]
 
-        self.occupied = Occupied(BB_RANK_G | BB_H2 | BB_H8 | BB_RANK_I, BB_RANK_A | BB_B2 | BB_B8 | BB_RANK_C)
+        self.occupied = Occupied(
+            BB_RANK_G | BB_H2 | BB_H8 | BB_RANK_I, BB_RANK_A | BB_B2 | BB_B8 | BB_RANK_C)
 
         self.king_squares = [I5, A5]
         self.pieces = [NONE for i in SQUARES]
@@ -753,26 +764,27 @@ class Board(object):
         self.move_number = 1
         self.captured_piece_stack = collections.deque()
         self.move_stack = collections.deque()
-        self.incremental_zobrist_hash = self.board_zobrist_hash(DEFAULT_RANDOM_ARRAY)
+        self.incremental_zobrist_hash = self.board_zobrist_hash(
+            DEFAULT_RANDOM_ARRAY)
         self.transpositions = collections.Counter((self.zobrist_hash(), ))
 
     def clear(self):
         self.piece_bb = [
-                BB_VOID,                       # NONE
-                BB_VOID,                       # PAWN
-                BB_VOID,                       # LANCE
-                BB_VOID,                       # KNIGHT
-                BB_VOID,                       # SILVER
-                BB_VOID,                       # GOLD
-                BB_VOID,                       # BISHOP
-                BB_VOID,                       # ROOK
-                BB_VOID,                       # KING
-                BB_VOID,                       # PROM_PAWN
-                BB_VOID,                       # PROM_LANCE
-                BB_VOID,                       # PROM_KNIGHT
-                BB_VOID,                       # PROM_SILVER
-                BB_VOID,                       # PROM_BISHOP
-                BB_VOID,                       # PROM_ROOK
+            BB_VOID,                       # NONE
+            BB_VOID,                       # PAWN
+            BB_VOID,                       # LANCE
+            BB_VOID,                       # KNIGHT
+            BB_VOID,                       # SILVER
+            BB_VOID,                       # GOLD
+            BB_VOID,                       # BISHOP
+            BB_VOID,                       # ROOK
+            BB_VOID,                       # KING
+            BB_VOID,                       # PROM_PAWN
+            BB_VOID,                       # PROM_LANCE
+            BB_VOID,                       # PROM_KNIGHT
+            BB_VOID,                       # PROM_SILVER
+            BB_VOID,                       # PROM_BISHOP
+            BB_VOID,                       # PROM_ROOK
         ]
 
         self.pieces_in_hand = [collections.Counter(), collections.Counter()]
@@ -786,7 +798,8 @@ class Board(object):
         self.move_number = 1
         self.captured_piece_stack = collections.deque()
         self.move_stack = collections.deque()
-        self.incremental_zobrist_hash = self.board_zobrist_hash(DEFAULT_RANDOM_ARRAY)
+        self.incremental_zobrist_hash = self.board_zobrist_hash(
+            DEFAULT_RANDOM_ARRAY)
         self.transpositions = collections.Counter((self.zobrist_hash(), ))
 
     def piece_at(self, square):
@@ -816,7 +829,8 @@ class Board(object):
         if p[piece_type] == 0:
             del p[piece_type]
         elif p[piece_type] < 0:
-            raise ValueError('The piece is not in hand: {0}'.format(Piece(piece_type, self.turn)))
+            raise ValueError('The piece is not in hand: {0}'.format(
+                Piece(piece_type, self.turn)))
 
     def has_piece_in_hand(self, piece_type, color):
         if piece_type >= PROM_PAWN:
@@ -847,7 +861,8 @@ class Board(object):
             piece_index = (piece_type - 1) * 2
         else:
             piece_index = (piece_type - 1) * 2 + 1
-        self.incremental_zobrist_hash ^= DEFAULT_RANDOM_ARRAY[81 * piece_index + 9 * rank_index(square) + file_index(square)]
+        self.incremental_zobrist_hash ^= DEFAULT_RANDOM_ARRAY[
+            81 * piece_index + 9 * rank_index(square) + file_index(square)]
 
     def set_piece_at(self, square, piece, from_hand=False, into_hand=False):
         '''Sets a piece at the given square. An existing piece is replaced.'''
@@ -874,14 +889,15 @@ class Board(object):
             piece_index = (piece.piece_type - 1) * 2
         else:
             piece_index = (piece.piece_type - 1) * 2 + 1
-        self.incremental_zobrist_hash ^= DEFAULT_RANDOM_ARRAY[81 * piece_index + 9 * rank_index(square) + file_index(square)]
+        self.incremental_zobrist_hash ^= DEFAULT_RANDOM_ARRAY[
+            81 * piece_index + 9 * rank_index(square) + file_index(square)]
 
     def generate_pseudo_legal_moves(self, pawns=True, lances=True, knights=True, silvers=True, golds=True,
-            bishops=True, rooks=True,
-            kings=True,
-            prom_pawns=True, prom_lances=True, prom_knights=True, prom_silvers=True, prom_bishops=True, prom_rooks=True,
-            pawns_drop=True, lances_drop=True, knights_drop=True, silvers_drop=True, golds_drop=True,
-            bishops_drop=True, rooks_drop=True):
+                                    bishops=True, rooks=True,
+                                    kings=True,
+                                    prom_pawns=True, prom_lances=True, prom_knights=True, prom_silvers=True, prom_bishops=True, prom_rooks=True,
+                                    pawns_drop=True, lances_drop=True, knights_drop=True, silvers_drop=True, golds_drop=True,
+                                    bishops_drop=True, rooks_drop=True):
 
         move_flags = [False,
                       pawns, lances, knights, silvers,
@@ -900,7 +916,8 @@ class Board(object):
                 from_square = bit_scan(movers)
 
                 while from_square != -1 and from_square is not None:
-                    moves = Board.attacks_from(piece_type, from_square, self.occupied, self.turn) & ~self.occupied[self.turn]
+                    moves = Board.attacks_from(
+                        piece_type, from_square, self.occupied, self.turn) & ~self.occupied[self.turn]
                     to_square = bit_scan(moves)
                     while to_square != - 1 and to_square is not None:
                         if can_move_without_promotion(to_square, piece_type, self.turn):
@@ -930,7 +947,8 @@ class Board(object):
             return False
 
         for piece_type in piece_types:
-            is_attacked = Board.attacks_from(piece_type, square, self.occupied, color ^ 1) & self.piece_bb[piece_type] & self.occupied[color]
+            is_attacked = Board.attacks_from(piece_type, square, self.occupied, color ^ 1) & self.piece_bb[
+                piece_type] & self.occupied[color]
             if is_attacked:
                 return True
 
@@ -939,7 +957,8 @@ class Board(object):
     def attacker_mask(self, color, square):
         attackers = BB_VOID
         for piece_type in PIECE_TYPES:
-            attackers |= Board.attacks_from(piece_type, square, self.occupied, color ^ 1) & self.piece_bb[piece_type]
+            attackers |= Board.attacks_from(
+                piece_type, square, self.occupied, color ^ 1) & self.piece_bb[piece_type]
         return attackers & self.occupied[color]
 
     def attackers(self, color, square):
@@ -1016,12 +1035,14 @@ class Board(object):
             return False
 
         # Pawn can capture a king next move?
-        moves = BB_PAWN_ATTACKS[self.turn ^ 1][pawn_square] & ~self.occupied[self.turn ^ 1]
+        moves = BB_PAWN_ATTACKS[self.turn ^ 1][
+            pawn_square] & ~self.occupied[self.turn ^ 1]
         if not moves & BB_SQUARES[king_square]:
             return False
 
         # Can king escape? (including capturing a dropped pawn)
-        moves = Board.attacks_from(KING, king_square, self.occupied, self.turn) & ~self.occupied[self.turn]
+        moves = Board.attacks_from(
+            KING, king_square, self.occupied, self.turn) & ~self.occupied[self.turn]
         square = bit_scan(moves)
         while square != -1 and square is not None:
             if not self.is_attacked_by(self.turn ^ 1, square):
@@ -1035,13 +1056,13 @@ class Board(object):
         return True
 
     def generate_legal_moves(self, pawns=True, lances=True, knights=True, silvers=True, golds=True, bishops=True,
-            rooks=True, king=True,
-            pawns_drop=True, lances_drop=True, knights_drop=True, silvers_drop=True, golds_drop=True,
-            bishops_drop=True, rooks_drop=True):
+                             rooks=True, king=True,
+                             pawns_drop=True, lances_drop=True, knights_drop=True, silvers_drop=True, golds_drop=True,
+                             bishops_drop=True, rooks_drop=True):
         return (move for move in self.generate_pseudo_legal_moves(
                 pawns, lances, knights, silvers, golds, bishops, rooks, king,
                 pawns_drop, lances_drop, knights_drop, silvers_drop, golds_drop, bishops_drop, rooks_drop
-            ) if not self.is_suicide_or_check_by_dropping_pawn(move))
+                ) if not self.is_suicide_or_check_by_dropping_pawn(move))
 
     def is_pseudo_legal(self, move):
         # Null moves are not pseudo legal.
@@ -1204,7 +1225,8 @@ class Board(object):
             self.remove_piece_at(move.from_square, False)
 
         # Put piece on target square.
-        self.set_piece_at(move.to_square, Piece(piece_type, self.turn), from_hand, True)
+        self.set_piece_at(move.to_square, Piece(
+            piece_type, self.turn), from_hand, True)
 
         # Swap turn.
         self.turn ^= 1
@@ -1241,12 +1263,15 @@ class Board(object):
         if move.from_square is None:
             self.add_piece_into_hand(piece_type, self.turn ^ 1)
         else:
-            self.set_piece_at(move.from_square, Piece(piece_type, self.turn ^ 1))
+            self.set_piece_at(move.from_square, Piece(
+                piece_type, self.turn ^ 1))
 
         # Restore target square.
         if captured_piece_type:
-            self.remove_piece_from_hand(captured_piece_type, captured_piece_color ^ 1)
-            self.set_piece_at(move.to_square, Piece(captured_piece_type, captured_piece_color))
+            self.remove_piece_from_hand(
+                captured_piece_type, captured_piece_color ^ 1)
+            self.set_piece_at(move.to_square, Piece(
+                captured_piece_type, captured_piece_color))
         else:
             self.remove_piece_at(move.to_square)
 
@@ -1325,12 +1350,14 @@ class Board(object):
         # Ensure there are six parts.
         parts = sfen.split()
         if len(parts) != 4:
-            raise ValueError('sfen string should consist of 6 parts: {0}'.format(repr(sfen)))
+            raise ValueError(
+                'sfen string should consist of 6 parts: {0}'.format(repr(sfen)))
 
         # Ensure the board part is valid.
         rows = parts[0].split('/')
         if len(rows) != 9:
-            raise ValueError('expected 9 rows in position part of sfen: {0}'.format(repr(sfen)))
+            raise ValueError(
+                'expected 9 rows in position part of sfen: {0}'.format(repr(sfen)))
 
         # Validate each row.
         for row in rows:
@@ -1341,32 +1368,39 @@ class Board(object):
             for c in row:
                 if c in ['1', '2', '3', '4', '5', '6', '7', '8', '9']:
                     if previous_was_digit:
-                        raise ValueError('two subsequent digits in position part of sfen: {0}'.format(repr(sfen)))
+                        raise ValueError(
+                            'two subsequent digits in position part of sfen: {0}'.format(repr(sfen)))
                     if previous_was_plus:
-                        raise ValueError('Cannot promote squares in position part of sfen: {0}'.format(repr(sfen)))
+                        raise ValueError(
+                            'Cannot promote squares in position part of sfen: {0}'.format(repr(sfen)))
                     field_sum += int(c)
                     previous_was_digit = True
                     previous_was_plus = False
                 elif c == '+':
                     if previous_was_plus:
-                        raise ValueError('Double promotion prefixes in position part of sfen: {0}'.format(repr(sfen)))
+                        raise ValueError(
+                            'Double promotion prefixes in position part of sfen: {0}'.format(repr(sfen)))
                     previous_was_digit = False
                     previous_was_plus = True
                 elif c.lower() in ['p', 'l', 'n', 's', 'g', 'b', 'r', 'k']:
                     field_sum += 1
                     if previous_was_plus and (c.lower() == 'g' or c.lower() == 'k'):
-                      raise ValueError('Gold and King cannot promote in position part of sfen: {0}')
+                        raise ValueError(
+                            'Gold and King cannot promote in position part of sfen: {0}')
                     previous_was_digit = False
                     previous_was_plus = False
                 else:
-                    raise ValueError('invalid character in position part of sfen: {0}'.format(repr(sfen)))
+                    raise ValueError(
+                        'invalid character in position part of sfen: {0}'.format(repr(sfen)))
 
             if field_sum != 9:
-                raise ValueError('expected 9 columns per row in position part of sfen: {0}'.format(repr(sfen)))
+                raise ValueError(
+                    'expected 9 columns per row in position part of sfen: {0}'.format(repr(sfen)))
 
         # Check that the turn part is valid.
         if not parts[1] in ['b', 'w']:
-            raise ValueError("expected 'b' or 'w' for turn part of sfen: {0}".format(repr(sfen)))
+            raise ValueError(
+                "expected 'b' or 'w' for turn part of sfen: {0}".format(repr(sfen)))
 
         # Check pieces in hand is valid.
         # TODO: implement with checking parts[2]
@@ -1374,7 +1408,8 @@ class Board(object):
         # Check that the fullmove number part is valid.
         # 0 is allowed for compability but later replaced with 1.
         if int(parts[3]) < 0:
-            raise ValueError('fullmove number must be positive: {0}'.format(repr(sfen)))
+            raise ValueError(
+                'fullmove number must be positive: {0}'.format(repr(sfen)))
 
         # Clear board.
         self.clear()
@@ -1392,8 +1427,9 @@ class Board(object):
             else:
                 piece_symbol = c
                 if previous_was_plus:
-                  piece_symbol = '+' + piece_symbol
-                self.set_piece_at(square_index, Piece.from_symbol(piece_symbol))
+                    piece_symbol = '+' + piece_symbol
+                self.set_piece_at(
+                    square_index, Piece.from_symbol(piece_symbol))
                 square_index += 1
                 previous_was_plus = False
 
@@ -1415,7 +1451,8 @@ class Board(object):
                     piece = Piece.from_symbol(c)
                     if piece_count == 0:
                         piece_count = 1
-                    self.add_piece_into_hand(piece.piece_type, piece.color, piece_count)
+                    self.add_piece_into_hand(
+                        piece.piece_type, piece.color, piece_count)
                     piece_count = 0
 
         # Set the mover counters.
@@ -1449,10 +1486,10 @@ class Board(object):
                     piece = Piece(piece_type, color)
                     builder.append(piece.japanese_symbol())
                     if piece_count > 1:
-                        builder.append(NUMBER_JAPANESE_KANJI_SYMBOLS[piece_count])
+                        builder.append(
+                            NUMBER_JAPANESE_KANJI_SYMBOLS[piece_count])
 
         return ''.join(builder)
-
 
     def kif_str(self):
         builder = []
@@ -1478,7 +1515,8 @@ class Board(object):
 
             if BB_SQUARES[square] & BB_FILE_1:
                 builder.append('|')
-                builder.append(NUMBER_JAPANESE_KANJI_SYMBOLS[rank_index(square) + 1])
+                builder.append(NUMBER_JAPANESE_KANJI_SYMBOLS[
+                               rank_index(square) + 1])
                 builder.append('\n')
 
         builder.append('+---------------------------+\n')
@@ -1560,13 +1598,13 @@ class Board(object):
         # 19 * 5 * 5 * 5 * 5 * 3 * 3 = 106875 < pow(2, 17)
         # just checking black side is okay in normal state
         i = (
-                self.pieces_in_hand[BLACK][ROOK] * 35625 +
-                self.pieces_in_hand[BLACK][BISHOP] * 11875 +
-                self.pieces_in_hand[BLACK][GOLD] * 2375 +
-                self.pieces_in_hand[BLACK][SILVER] * 475 +
-                self.pieces_in_hand[BLACK][KNIGHT] * 95 +
-                self.pieces_in_hand[BLACK][LANCE] * 19 +
-                self.pieces_in_hand[BLACK][PAWN])
+            self.pieces_in_hand[BLACK][ROOK] * 35625 +
+            self.pieces_in_hand[BLACK][BISHOP] * 11875 +
+            self.pieces_in_hand[BLACK][GOLD] * 2375 +
+            self.pieces_in_hand[BLACK][SILVER] * 475 +
+            self.pieces_in_hand[BLACK][KNIGHT] * 95 +
+            self.pieces_in_hand[BLACK][LANCE] * 19 +
+            self.pieces_in_hand[BLACK][PAWN])
         bit = bit_scan(i)
         while bit != -1 and bit is not None:
             zobrist_hash ^= array[2269 + bit]
@@ -1584,14 +1622,16 @@ class Board(object):
         square = bit_scan(squares)
         while square != -1 and square is not None:
             piece_index = (self.piece_type_at(square) - 1) * 2
-            zobrist_hash ^= array[81 * piece_index + 9 * rank_index(square) + file_index(square)]
+            zobrist_hash ^= array[81 * piece_index + 9 *
+                                  rank_index(square) + file_index(square)]
             square = bit_scan(squares, square + 1)
 
         squares = self.occupied[WHITE]
         square = bit_scan(squares)
         while square != -1 and square is not None:
             piece_index = (self.piece_type_at(square) - 1) * 2 + 1
-            zobrist_hash ^= array[81 * piece_index + 9 * rank_index(square) + file_index(square)]
+            zobrist_hash ^= array[81 * piece_index + 9 *
+                                  rank_index(square) + file_index(square)]
             square = bit_scan(squares, square + 1)
 
         return zobrist_hash

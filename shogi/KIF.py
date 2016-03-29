@@ -24,8 +24,10 @@ import re
 import shogi
 import codecs
 
+
 class ParserException(Exception):
     pass
+
 
 class Parser:
     MOVE_RE = re.compile(r'\A[ 0-9]{4} (\u4e2d\u65ad|\u6295\u4e86|\u6301\u5c06\u68cb|\u5148\u65e5\u624b|\u8a70\u307f|\u5207\u308c\u8ca0\u3051|\u53cd\u5247\u52dd\u3061|\u53cd\u5247\u8ca0\u3051|(([\uff11\uff12\uff13\uff14\uff15\uff16\uff17\uff18\uff19])([\u96f6\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d])|\u540c\u3000)([\u6b69\u9999\u6842\u9280\u91d1\u89d2\u98db\u7389\u3068\u674f\u572d\u5168\u99ac\u9f8d])(\u6253|(\u6210?)\(([0-9])([0-9])\)))\s*\Z')
@@ -47,7 +49,8 @@ class Parser:
         '\u305d\u306e\u4ed6': None
     }
 
-    RESULT_RE = re.compile(r'\u3000*\u307e\u3067(\d+)\u624b\u3067((\u5148|\u4e0b|\u5f8c|\u4e0a)\u624b\u306e\u52dd\u3061|\u5343\u65e5\u624b|\u6301\u5c06\u68cb|\u4e2d\u65ad)')
+    RESULT_RE = re.compile(
+        r'\u3000*\u307e\u3067(\d+)\u624b\u3067((\u5148|\u4e0b|\u5f8c|\u4e0a)\u624b\u306e\u52dd\u3061|\u5343\u65e5\u624b|\u6301\u5c06\u68cb|\u4e2d\u65ad)')
 
     @staticmethod
     def parse_file(path):
@@ -56,7 +59,7 @@ class Parser:
 
     @staticmethod
     def parse_pieces_in_hand(target):
-        if target == '\u306a\u3057': # None in japanese
+        if target == '\u306a\u3057':  # None in japanese
             return {}
 
         result = {}
@@ -83,29 +86,31 @@ class Parser:
 
         m = Parser.MOVE_RE.match(line)
         if m and m.group(1) not in [
-                    '\u4e2d\u65ad',
-                    '\u6295\u4e86',
-                    '\u6301\u5c06\u68cb',
-                    '\u5343\u65e5\u624b',
-                    '\u8a70\u307f',
-                    '\u5207\u308c\u8ca0\u3051',
-                    '\u53cd\u5247\u304b\u52dd\u3061',
-                    '\u53cd\u5247\u8ca0\u3051'
-                ]:
+            '\u4e2d\u65ad',
+            '\u6295\u4e86',
+            '\u6301\u5c06\u68cb',
+            '\u5343\u65e5\u624b',
+            '\u8a70\u307f',
+            '\u5207\u308c\u8ca0\u3051',
+            '\u53cd\u5247\u304b\u52dd\u3061',
+            '\u53cd\u5247\u8ca0\u3051'
+        ]:
             piece_type = shogi.PIECE_JAPANESE_SYMBOLS.index(m.group(5))
             if m.group(2) == '\u540c\u3000':
                 # same position
                 to_square = last_to_square
             else:
-                to_field = 9 - shogi.NUMBER_JAPANESE_NUMBER_SYMBOLS.index(m.group(3))
-                to_rank = shogi.NUMBER_JAPANESE_KANJI_SYMBOLS.index(m.group(4)) - 1
+                to_field = 9 - \
+                    shogi.NUMBER_JAPANESE_NUMBER_SYMBOLS.index(m.group(3))
+                to_rank = shogi.NUMBER_JAPANESE_KANJI_SYMBOLS.index(
+                    m.group(4)) - 1
                 to_square = to_rank * 9 + to_field
                 last_to_square = to_square
 
             if m.group(6) == '\u6253':
                 # piece drop
                 return ('{0}*{1}'.format(shogi.PIECE_SYMBOLS[piece_type].upper(),
-                    shogi.SQUARE_NAMES[to_square]), last_to_square)
+                                         shogi.SQUARE_NAMES[to_square]), last_to_square)
             else:
                 from_field = 9 - int(m.group(8))
                 from_rank = int(m.group(9)) - 1
@@ -133,29 +138,33 @@ class Parser:
             elif '\uff1a' in line:
                 (key, value) = line.split('\uff1a', 1)
                 value = value.rstrip('\u3000')
-                if key == '\u5148\u624b' or key == '\u4e0b\u624b': # sente or shitate
+                if key == '\u5148\u624b' or key == '\u4e0b\u624b':  # sente or shitate
                     # Blacks's name
                     names[shogi.BLACK] = value
-                elif key == '\u5f8c\u624b' or key == '\u4e0a\u624b': # gote or uwate
+                elif key == '\u5f8c\u624b' or key == '\u4e0a\u624b':  # gote or uwate
                     # White's name
                     names[shogi.WHITE] = value
                 elif key == '\u5148\u624b\u306e\u6301\u99d2' or \
-                        key == '\u4e0b\u624b\u306e\u6301\u99d2': # sente or shitate's pieces in hand
+                        key == '\u4e0b\u624b\u306e\u6301\u99d2':  # sente or shitate's pieces in hand
                     # First player's pieces in hand
-                    pieces_in_hand[shogi.BLACK] == Parser.parse_pieces_in_hand(value)
+                    pieces_in_hand[
+                        shogi.BLACK] == Parser.parse_pieces_in_hand(value)
                 elif key == '\u5f8c\u624b\u306e\u6301\u99d2' or \
-                        key == '\u4e0a\u624b\u306e\u6301\u99d2': # gote or uwate's pieces in hand
+                        key == '\u4e0a\u624b\u306e\u6301\u99d2':  # gote or uwate's pieces in hand
                     # Second player's pieces in hand
-                    pieces_in_hand[shogi.WHITE] == Parser.parse_pieces_in_hand(value)
-                elif key == '\u624b\u5408\u5272': # teai wari
+                    pieces_in_hand[
+                        shogi.WHITE] == Parser.parse_pieces_in_hand(value)
+                elif key == '\u624b\u5408\u5272':  # teai wari
                     sfen = Parser.HANDYCAP_SFENS[value]
                     if sfen is None:
-                        raise ParserException('Cannot support handycap type "other"')
+                        raise ParserException(
+                            'Cannot support handycap type "other"')
             elif line == '\u5f8c\u624b\u756a':
                 # Current turn is white
                 current_turn = shogi.WHITE
             else:
-                (move, last_to_square) = Parser.parse_move_str(line, last_to_square)
+                (move, last_to_square) = Parser.parse_move_str(
+                    line, last_to_square)
                 if move is not None:
                     moves.append(move)
                 else:

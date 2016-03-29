@@ -21,7 +21,9 @@ from __future__ import unicode_literals
 from shogi import Person
 import unittest
 
+
 class NameTestCase(unittest.TestCase):
+
     def test_is_professional(self):
         result = Person.Name.is_professional('羽生　善治 名人・棋聖・王位・王座')
         self.assertTrue(result)
